@@ -23,7 +23,7 @@ public class SeededStream<E> implements Stream<E> {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
+//Hello World
 	@Override
 	public boolean matchAny(Predicate<? super E> predicate) {
 		// TODO Auto-generated method stub
