@@ -13,6 +13,7 @@ public class SeededStream<E> implements Stream<E> {
 	@Override
 	public Iterator<E> iterator() {
 		// TODO Auto-generated method stub
+		// TODO by chris
 		return null;
 	}
 
