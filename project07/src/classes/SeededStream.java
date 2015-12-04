@@ -9,6 +9,14 @@ import interfaces.Predicate;
 import interfaces.Stream;
 
 public class SeededStream<E> implements Stream<E> {
+	
+	public SeededStream(E seed, Mapping<E, E> update) {
+		
+	}
+
+	public SeededStream(E seed, Mapping<E, E> update, Predicate<E> condition) {
+		
+	}
 
 	@Override
 	public Iterator<E> iterator() {

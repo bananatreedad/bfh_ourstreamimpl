@@ -13,6 +13,7 @@ public class SeededStreamTest {
 	@Test
 	public void test_get1() {
 		Stream<Integer> stream = new SeededStream<>(1, x -> x + 1, x -> x <= 10);
+
 		Assert.assertEquals((Integer) 1, stream.get(0));
 		Assert.assertEquals((Integer) 2, stream.get(1));
 		Assert.assertEquals((Integer) 3, stream.get(2));
