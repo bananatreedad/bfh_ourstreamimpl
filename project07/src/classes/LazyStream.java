@@ -127,5 +127,4 @@ public abstract class LazyStream<E> implements Stream<E> {
 		// TODO
 		return null;
 	}
-
 }
