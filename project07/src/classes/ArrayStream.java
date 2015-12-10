@@ -9,6 +9,11 @@ import interfaces.Predicate;
 import interfaces.Stream;
 
 public class ArrayStream<E> implements Stream<E>{
+	
+	@SafeVarargs
+	public ArrayStream(E... e) {
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
 	public Iterator<E> iterator() {

@@ -1,7 +1,5 @@
 package classes;
 
-//TEST TEST TEST
-
 import java.util.Iterator;
 import java.util.List;
 
@@ -11,6 +9,14 @@ import interfaces.Predicate;
 import interfaces.Stream;
 
 public class SeededStream<E> implements Stream<E> {
+	
+	public SeededStream(E seed, Mapping<E, E> update) {
+		
+	}
+
+	public SeededStream(E seed, Mapping<E, E> update, Predicate<E> condition) {
+		
+	}
 
 	@Override
 	public Iterator<E> iterator() {
@@ -23,7 +29,7 @@ public class SeededStream<E> implements Stream<E> {
 		// TODO Auto-generated method stub
 		return false;
 	}
-//Hello World
+
 	@Override
 	public boolean matchAny(Predicate<? super E> predicate) {
 		// TODO Auto-generated method stub
