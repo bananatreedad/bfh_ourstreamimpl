@@ -10,6 +10,7 @@ import interfaces.Stream;
 
 public abstract class LazyStream<E> implements Stream<E> {
 
+	//<3
 	@Override
 	public boolean matchAll(Predicate<? super E> predicate) {
 		Iterator<E> iterator = this.iterator();
