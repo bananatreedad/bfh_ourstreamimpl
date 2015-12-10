@@ -151,7 +151,15 @@ public abstract class LazyStream<E> implements Stream<E> {
 	}
 
 	public <F> Stream<F> map(Mapping<? super E, ? extends F> mapping) {
-		// TODO
+		
+		//TODO BUT HOW?
+		//Stream<F> stream = new this.getClass();
+
+		while(iterator().hasNext()) {
+			F f = mapping.apply(iterator().next());
+			
+		}
 		return null;
 	}
+
 }
