@@ -8,10 +8,11 @@ import interfaces.Mapping;
 import interfaces.Operator;
 import interfaces.Predicate;
 import interfaces.Stream;
+import javafx.util.Callback;
 
 public abstract class LazyStream<E> implements Stream<E> {
 
-	//<3
+	// <3
 	@Override
 	public boolean matchAll(Predicate<? super E> predicate) {
 		Iterator<E> iterator = this.iterator();
@@ -54,8 +55,9 @@ public abstract class LazyStream<E> implements Stream<E> {
 		Iterator<E> iterator = this.iterator();
 
 		int i = 0;
-		while(iterator.hasNext()) {
-			if(predicate.test(iterator.next())) i++;
+		while (iterator.hasNext()) {
+			if (predicate.test(iterator.next()))
+				i++;
 		}
 		return i;
 	}
@@ -63,26 +65,30 @@ public abstract class LazyStream<E> implements Stream<E> {
 	@Override
 	public E get(int index) throws IndexOutOfBoundsException {
 		Iterator<E> iterator = this.iterator();
-		
-		for (int i = 0; i < index; i++) {
-			if(!iterator.hasNext()) throw new IndexOutOfBoundsException();
-			
-			if(i == index) return iterator.next();
-			else iterator.next();
+
+		for (int i = 0; i <= index; i++) {
+			if (!iterator.hasNext())
+				throw new IndexOutOfBoundsException();
+
+			if (i == index)
+				return iterator.next();
+			else
+				iterator.next();
 		}
 
 		return null;
-		//TODO other return value if ran through without change?
+		// TODO other return value if ran through without change?
 	}
 
 	@Override
 	public E find(Predicate<? super E> predicate) {
 		Iterator<E> iterator = this.iterator();
-		
-		while(iterator.hasNext()) {
+
+		while (iterator.hasNext()) {
 			E e = iterator.next();
 
-			if(predicate.test(e)) return e;
+			if (predicate.test(e))
+				return e;
 		}
 
 		return null;
@@ -91,9 +97,9 @@ public abstract class LazyStream<E> implements Stream<E> {
 	@Override
 	public E reduce(Operator<E> operator) {
 		Iterator<E> iterator = this.iterator();
-		
+
 		E e = null;
-		while(iterator.hasNext()) {
+		while (iterator.hasNext()) {
 			e = operator.apply(e, iterator.next());
 			// TODO funktioniert das mit null am anfang?
 		}
@@ -105,11 +111,11 @@ public abstract class LazyStream<E> implements Stream<E> {
 	public List<E> toList() {
 		Iterator<E> iterator = this.iterator();
 		List<E> list = new LinkedList<>();
-	
-		while(iterator.hasNext()) {
+
+		while (iterator.hasNext()) {
 			list.add(iterator.next());
 		}
-		
+
 		return list;
 	}
 
@@ -117,24 +123,26 @@ public abstract class LazyStream<E> implements Stream<E> {
 	public Stream<E> limit(int n) throws IllegalArgumentException {
 
 		for (int i = 0; i < n; i++) {
-			if(!iterator().hasNext()) throw new IllegalArgumentException(); 
+			if (!iterator().hasNext())
+				throw new IllegalArgumentException();
 			iterator().next();
 		}
-		
-		while(iterator().hasNext()) {
+
+		while (iterator().hasNext()) {
 			iterator().remove();
 		}
-		
+
 		return this;
 	}
 
 	@Override
 	public Stream<E> skip(int n) throws IllegalArgumentException {
 		Iterator<E> iterator = this.iterator();
-		
-		//TODO add exception
+
+		// TODO add exception
 		for (int i = 0; i < n; i++) {
-			if(iterator.hasNext()) iterator.next();
+			if (iterator.hasNext())
+				iterator.next();
 		}
 
 		return this;
@@ -142,23 +150,34 @@ public abstract class LazyStream<E> implements Stream<E> {
 
 	@Override
 	public Stream<E> filter(Predicate<? super E> predicate) {
-		
-		while(iterator().hasNext()) {
-			if(predicate.test(iterator().next())) iterator().remove();
+
+		while (iterator().hasNext()) {
+			if (predicate.test(iterator().next()))
+				iterator().remove();
 		}
 
 		return this;
 	}
 
 	public <F> Stream<F> map(Mapping<? super E, ? extends F> mapping) {
-		
-		//TODO BUT HOW?
-		//Stream<F> stream = new this.getClass();
 
-		while(iterator().hasNext()) {
-			F f = mapping.apply(iterator().next());
+		// TODO BUT HOW?
+		// Stream<F> stream = new this.getClass();
+
+		Stream<F> newStream = new LazyStream<F>() {
+
+			@Override
+			public Iterator<F> iterator() {
+				// TODO Auto-generated method stub
+				return null;
+			}
 			
+		};
+
+		while (iterator().hasNext()) {
+			F f = mapping.apply(iterator().next());
 		}
+
 		return null;
 	}
 
