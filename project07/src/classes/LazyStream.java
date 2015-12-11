@@ -1,6 +1,7 @@
 package classes;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import interfaces.Mapping;
@@ -102,26 +103,51 @@ public abstract class LazyStream<E> implements Stream<E> {
 
 	@Override
 	public List<E> toList() {
-		// TODO
-		return null;
+		Iterator<E> iterator = this.iterator();
+		List<E> list = new LinkedList<>();
+	
+		while(iterator.hasNext()) {
+			list.add(iterator.next());
+		}
+		
+		return list;
 	}
 
 	@Override
 	public Stream<E> limit(int n) throws IllegalArgumentException {
-		// TODO
-		return null;
+
+		for (int i = 0; i < n; i++) {
+			if(!iterator().hasNext()) throw new IllegalArgumentException(); 
+			iterator().next();
+		}
+		
+		while(iterator().hasNext()) {
+			iterator().remove();
+		}
+		
+		return this;
 	}
 
 	@Override
 	public Stream<E> skip(int n) throws IllegalArgumentException {
-		// TODO
-		return null;
+		Iterator<E> iterator = this.iterator();
+		
+		//TODO add exception
+		for (int i = 0; i < n; i++) {
+			if(iterator.hasNext()) iterator.next();
+		}
+
+		return this;
 	}
 
 	@Override
 	public Stream<E> filter(Predicate<? super E> predicate) {
-		// TODO
-		return null;
+		
+		while(iterator().hasNext()) {
+			if(predicate.test(iterator().next())) iterator().remove();
+		}
+
+		return this;
 	}
 
 	public <F> Stream<F> map(Mapping<? super E, ? extends F> mapping) {
