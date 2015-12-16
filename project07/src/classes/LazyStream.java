@@ -62,23 +62,33 @@ public abstract class LazyStream<E> implements Stream<E> {
 		return i;
 	}
 
+	
+	/**
+	 * 
+	 */
 	@Override
 	public E get(int index) throws IndexOutOfBoundsException {
 		Iterator<E> iterator = this.iterator();
-
-		for (int i = 0; i <= index; i++) {
-			if (!iterator.hasNext())
-				throw new IndexOutOfBoundsException();
-
-			if (i == index)
-				return iterator.next();
-			else
-				iterator.next();
+		
+		E e = getRootValue();
+	
+		for (int i = 0; i < index ; i++) {
+			//if nothing to take is left - throw exception
+			if(!iterator.hasNext()) throw new IndexOutOfBoundsException();
+			e = iterator.next();
 		}
-
-		return null;
-		// TODO other return value if ran through without change?
+		
+		return e;
 	}
+
+	/**
+	 * getRootValue should be implemented to get the value in case of a get at index 0
+	 * 
+	 * @return
+	 */
+	public abstract E getRootValue(); 
+
+	//TODO W T F ?
 
 	@Override
 	public E find(Predicate<? super E> predicate) {
@@ -137,48 +147,98 @@ public abstract class LazyStream<E> implements Stream<E> {
 
 	@Override
 	public Stream<E> skip(int n) throws IllegalArgumentException {
-		Iterator<E> iterator = this.iterator();
 
 		// TODO add exception
 		for (int i = 0; i < n; i++) {
-			if (iterator.hasNext())
-				iterator.next();
+			if (iterator().hasNext())
+				iterator().next();
 		}
 
-		return this;
+		Stream<E> stream = new LazyStream<E>() {
+
+			final Stream<E> oldStream = this;
+
+			@Override
+			public Iterator<E> iterator() {
+				return new Iterator<E>() {
+
+					final Iterator<E> iterator = oldStream.iterator();
+
+					@Override
+					public boolean hasNext() {
+						return iterator.hasNext();
+					}
+
+					@Override
+					public E next() {
+						return iterator.next();
+					}
+				};
+			};
+		};
+
+		return stream;
 	}
 
 	@Override
 	public Stream<E> filter(Predicate<? super E> predicate) {
 
-		while (iterator().hasNext()) {
-			if (predicate.test(iterator().next()))
-				iterator().remove();
-		}
+		final Stream<E> thisStream = this;
 
-		return this;
+//		final Stream<E> newStream = new LazyStream<E>() {
+//
+//			@Override
+//			public Iterator iterator() {
+//				return new Iterator<E>() {
+//
+//					final Iterator<E> thisIterator = thisStream.iterator();
+//
+//					@Override
+//					public boolean hasNext() {
+//						return predicate.test(thisIterator.next());
+//					}
+//
+//					@Override
+//					public E next() {
+//						if(predicate.test(thisIterator.next()))
+//						return null;
+//					}
+//				};
+//			}
+//
+//		};
+
+		return thisStream;
 	}
 
 	public <F> Stream<F> map(Mapping<? super E, ? extends F> mapping) {
 
-		// TODO BUT HOW?
-		// Stream<F> stream = new this.getClass();
+		// TODO this is the example solved with teacher
+
+		final Stream<E> thisStream = this;
 
 		Stream<F> newStream = new LazyStream<F>() {
-
 			@Override
 			public Iterator<F> iterator() {
-				// TODO Auto-generated method stub
-				return null;
+
+				return new Iterator<F>() {
+
+					final Iterator<E> it = thisStream.iterator();
+
+					@Override
+					public boolean hasNext() {
+						return it.hasNext();
+					}
+
+					@Override
+					public F next() {
+						return mapping.apply(it.next());
+					}
+				};
 			}
-			
+
 		};
 
-		while (iterator().hasNext()) {
-			F f = mapping.apply(iterator().next());
-		}
-
-		return null;
+		return newStream;
 	}
-
 }

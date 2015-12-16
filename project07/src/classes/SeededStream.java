@@ -16,6 +16,7 @@ public class SeededStream<E> extends LazyStream<E> {
 	}
 
 	public SeededStream(E seed, Mapping<E, E> update, Predicate<E> condition) {
+		this(seed, update);
 		this.condition = condition;
 	}
 
