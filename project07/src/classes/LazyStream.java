@@ -11,6 +11,7 @@ import interfaces.Stream;
 import javafx.util.Callback;
 
 public abstract class LazyStream<E> implements Stream<E> {
+	int atIndex = 0;
 
 	// <3
 	@Override
@@ -63,32 +64,21 @@ public abstract class LazyStream<E> implements Stream<E> {
 	}
 
 	
-	/**
-	 * 
-	 */
 	@Override
 	public E get(int index) throws IndexOutOfBoundsException {
-		Iterator<E> iterator = this.iterator();
+		E e = null;
+		if(index < 0 || index < atIndex) throw new IndexOutOfBoundsException();
+		//TODO check if again i'm not in the mood right now 
 		
-		E e = getRootValue();
-	
-		for (int i = 0; i < index ; i++) {
-			//if nothing to take is left - throw exception
-			if(!iterator.hasNext()) throw new IndexOutOfBoundsException();
-			e = iterator.next();
+		for (int i = atIndex; i < index; i++) {
+			if(!iterator().hasNext()) throw new IndexOutOfBoundsException();
+			
+			e = iterator().next();
+			atIndex++;
 		}
 		
 		return e;
 	}
-
-	/**
-	 * getRootValue should be implemented to get the value in case of a get at index 0
-	 * 
-	 * @return
-	 */
-	public abstract E getRootValue(); 
-
-	//TODO W T F ?
 
 	@Override
 	public E find(Predicate<? super E> predicate) {

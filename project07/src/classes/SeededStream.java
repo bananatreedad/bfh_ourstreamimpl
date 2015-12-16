@@ -21,19 +21,26 @@ public class SeededStream<E> extends LazyStream<E> {
 	}
 
 	@Override
+	public E get(int index) throws IndexOutOfBoundsException {
+		if(index == 0) return seed;
+		else return super.get(index);
+	};
+
+	@Override
 	public Iterator<E> iterator() {
 		Iterator<E> it = new Iterator<E>() {
-
+			
 			@Override
 			public boolean hasNext() {
 				boolean hasNext = true;
-				if(condition != null) hasNext = condition.test(seed);
+				if(condition != null) hasNext = condition.test(update.apply(seed));
 				return hasNext;
 			}
 
 			@Override
 			public E next() {
-				return update.apply(seed);
+				seed = update.apply(seed);
+				return seed;
 			}
 		};
 
