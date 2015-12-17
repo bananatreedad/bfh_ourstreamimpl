@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import exceptions.IsInfiniteException;
 import interfaces.Mapping;
 import interfaces.Operator;
 import interfaces.Predicate;
@@ -11,11 +12,16 @@ import interfaces.Stream;
 import javafx.util.Callback;
 
 public abstract class LazyStream<E> implements Stream<E> {
-	int atIndex = 0;
+	
+	private boolean isFinite = true;
+
+	//a child class is able to set itself to infinite 
+	protected void setInfinite() { isFinite = false; }
 
 	// <3
 	@Override
 	public boolean matchAll(Predicate<? super E> predicate) {
+		if(!isFinite) throw new IsInfiniteException();
 		Iterator<E> iterator = this.iterator();
 
 		while (iterator.hasNext()) {
@@ -28,6 +34,7 @@ public abstract class LazyStream<E> implements Stream<E> {
 
 	@Override
 	public boolean matchAny(Predicate<? super E> predicate) {
+		if(!isFinite) throw new IsInfiniteException();
 		Iterator<E> iterator = this.iterator();
 
 		while (iterator.hasNext()) {
@@ -40,6 +47,8 @@ public abstract class LazyStream<E> implements Stream<E> {
 
 	@Override
 	public int countAll() {
+		if(!isFinite) throw new IsInfiniteException();
+
 		Iterator<E> iterator = this.iterator();
 
 		int i = 0;
@@ -53,6 +62,7 @@ public abstract class LazyStream<E> implements Stream<E> {
 
 	@Override
 	public int count(Predicate<? super E> predicate) {
+		if(!isFinite) throw new IsInfiniteException();
 		Iterator<E> iterator = this.iterator();
 
 		int i = 0;
@@ -66,15 +76,15 @@ public abstract class LazyStream<E> implements Stream<E> {
 	
 	@Override
 	public E get(int index) throws IndexOutOfBoundsException {
+		Iterator<E> it = iterator();
+
 		E e = null;
-		if(index < 0 || index < atIndex) throw new IndexOutOfBoundsException();
+		if(index < 0) throw new IndexOutOfBoundsException();
+
 		//TODO check if again i'm not in the mood right now 
-		
-		for (int i = atIndex; i < index; i++) {
-			if(!iterator().hasNext()) throw new IndexOutOfBoundsException();
-			
-			e = iterator().next();
-			atIndex++;
+		for (int i = 0; i < index; i++) {
+			if(!it.hasNext()) throw new IndexOutOfBoundsException();
+			e = it.next();
 		}
 		
 		return e;
@@ -82,6 +92,7 @@ public abstract class LazyStream<E> implements Stream<E> {
 
 	@Override
 	public E find(Predicate<? super E> predicate) {
+		if(!isFinite) throw new IsInfiniteException();
 		Iterator<E> iterator = this.iterator();
 
 		while (iterator.hasNext()) {
@@ -96,6 +107,7 @@ public abstract class LazyStream<E> implements Stream<E> {
 
 	@Override
 	public E reduce(Operator<E> operator) {
+		if(!isFinite) throw new IsInfiniteException();
 		Iterator<E> iterator = this.iterator();
 
 		E e = null;
@@ -109,6 +121,7 @@ public abstract class LazyStream<E> implements Stream<E> {
 
 	@Override
 	public List<E> toList() {
+		if(!isFinite) throw new IsInfiniteException();
 		Iterator<E> iterator = this.iterator();
 		List<E> list = new LinkedList<>();
 
@@ -172,6 +185,7 @@ public abstract class LazyStream<E> implements Stream<E> {
 
 	@Override
 	public Stream<E> filter(Predicate<? super E> predicate) {
+		if(!isFinite) throw new IsInfiniteException();
 
 		final Stream<E> thisStream = this;
 
