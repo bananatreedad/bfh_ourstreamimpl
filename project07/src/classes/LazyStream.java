@@ -3,13 +3,13 @@ package classes;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import exceptions.IsInfiniteException;
 import interfaces.Mapping;
 import interfaces.Operator;
 import interfaces.Predicate;
 import interfaces.Stream;
-import javafx.util.Callback;
 
 public abstract class LazyStream<E> implements Stream<E> {
 
@@ -146,17 +146,37 @@ public abstract class LazyStream<E> implements Stream<E> {
 	@Override
 	public Stream<E> limit(int n) throws IllegalArgumentException {
 
-		for (int i = 0; i < n; i++) {
-			if (!iterator().hasNext())
-				throw new IllegalArgumentException();
-			iterator().next();
-		}
+		final Stream<E> oldStream = this;
 
-		while (iterator().hasNext()) {
-			iterator().remove();
-		}
+		Stream<E> stream = new LazyStream<E>() {
 
-		return this;
+			@Override
+			public Iterator<E> iterator() {
+
+				return new Iterator<E>() {
+
+					final Iterator<E> thisIt = oldStream.iterator();
+
+					int counter = 0;
+
+					@Override
+					public boolean hasNext() {
+						if (thisIt.hasNext() && counter < n) {
+							return true;
+						}
+						return false;
+					}
+
+					@Override
+					public E next() {
+						counter++;
+						return thisIt.next();
+					}
+				};
+			}
+		};
+
+		return stream;
 	}
 
 	@Override
@@ -196,38 +216,45 @@ public abstract class LazyStream<E> implements Stream<E> {
 
 	@Override
 	public Stream<E> filter(Predicate<? super E> predicate) {
-		if (!isFinite)
-			throw new IsInfiniteException();
 
 		Stream<E> thisStream = this;
 
 		Stream<E> newStream = new LazyStream<E>() {
-
-			E lastReturnedElem = null;
 
 			@Override
 			public Iterator<E> iterator() {
 				return new Iterator<E>() {
 
 					Iterator<E> thisIterator = thisStream.iterator();
+					E nextIfThere = null;
 
 					@Override
 					public boolean hasNext() {
-						
-						while(thisIterator.hasNext()) {
-							//TODO HOW?
-						}
+						if (!isFinite)
+							return true;
 
-						//not 100% true but an other solution would be very complex
-						return thisIterator.hasNext();
+						try {
+							E e = next();
+							nextIfThere = e;
+							return true;
+						} catch (NoSuchElementException e) {
+							return false;
+						}
 					}
 
 					@Override
 					public E next() {
-						while (true) {
-							E e = thisIterator.next();
-							if (predicate.test(e))
-								return e;
+						if (nextIfThere != null) {
+							E e = nextIfThere;
+							nextIfThere = null;
+							return e;
+						} else {
+							while (thisIterator.hasNext()) {
+								E e = thisIterator.next();
+								if (predicate.test(e))
+									return e;
+							}
+							throw new NoSuchElementException();
 						}
 					}
 				};

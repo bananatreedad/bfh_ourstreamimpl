@@ -23,21 +23,37 @@ public class MyTests {
 		System.out.println(stream.get(1));
 
 		System.out.println("#####");
-		
-		Stream<Integer> s = stream.filter(x -> x%2 == 0);
+
+		Stream<Integer> s = stream.filter(x -> x % 2 == 0);
 
 		Iterator<Integer> it2 = s.iterator();
 
 		System.out.println(it2.next());
 		System.out.println(it2.next());
 		System.out.println(it2.next());
-		
-		System.out.println("#####");
-		
-		Iterator<Integer> ite = stream.filter(x -> true).iterator();
 
-		System.out.println(ite.next());
-		System.out.println(ite.next());
-		System.out.println(ite.next());
+		System.out.println("#####");
+
+		Iterator<Integer> it4 = s.filter(x -> true).iterator();
+
+		System.out.println(it4.next());
+		System.out.println(it4.next());
+		System.out.println(it4.next());
+		System.out.println(it4.next());
+		
+		
+		System.out.println("###it5###");
+		Iterator<Integer> it5 = stream.limit(2).iterator(); 
+
+		System.out.println(it5.next());
+		System.out.println(it5.next());
+		System.out.println(it5.next());
+
+//		System.out.println(it5.next());
+//		System.out.println(it5.next());
+//		System.out.println(it5.next());
+//		System.out.println(it5.next());
+//		System.out.println(it5.next());
+
 	}
 }

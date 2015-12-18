@@ -19,6 +19,7 @@ public class Test1 {
 
 //		stringCollection.stream().skip(2).forEach(System.out::println);
 		
+		System.out.println("#####");
 		stringCollection.stream().limit(3).forEach(System.out::println);;
 		
 //		printVarArgs("asdf", "asdf", "uio");
