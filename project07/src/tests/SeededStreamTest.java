@@ -153,6 +153,7 @@ public class SeededStreamTest {
 		Assert.assertEquals(9, stream.limit(9).countAll());
 		Assert.assertEquals(1, stream.limit(1).countAll());
 		Assert.assertEquals(0, stream.limit(0).countAll());
+
 		try {
 			stream.limit(-1).countAll();
 			Assert.fail();

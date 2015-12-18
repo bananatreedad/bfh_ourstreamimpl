@@ -18,21 +18,18 @@ public class SeededStream<E> extends LazyStream<E> {
 	}
 
 	public SeededStream(E seed, Mapping<E, E> update, Predicate<E> condition) {
-		this(seed, update);
+		this.seed = seed;
+		this.update = update;
+
 		this.condition = condition;
 	}
-
-	@Override
-	public E get(int index) throws IndexOutOfBoundsException {
-		if(index == 0) return seed;
-		else return super.get(index);
-	};
 
 	@Override
 	public Iterator<E> iterator() {
 		Iterator<E> it = new Iterator<E>() {
 			
 			E itSeed = seed;
+			boolean isFirstNext = true;
 
 			@Override
 			public boolean hasNext() {
@@ -43,6 +40,10 @@ public class SeededStream<E> extends LazyStream<E> {
 
 			@Override
 			public E next() {
+				if(isFirstNext) {
+					isFirstNext = false;
+					return itSeed;
+				}
 				itSeed = update.apply(itSeed);
 				return itSeed;
 			}

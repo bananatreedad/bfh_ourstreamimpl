@@ -12,16 +12,19 @@ import interfaces.Stream;
 import javafx.util.Callback;
 
 public abstract class LazyStream<E> implements Stream<E> {
-	
+
 	private boolean isFinite = true;
 
-	//a child class is able to set itself to infinite 
-	protected void setInfinite() { isFinite = false; }
+	// a child class is able to set itself to infinite
+	protected void setInfinite() {
+		isFinite = false;
+	}
 
 	// <3
 	@Override
 	public boolean matchAll(Predicate<? super E> predicate) {
-		if(!isFinite) throw new IsInfiniteException();
+		if (!isFinite)
+			throw new IsInfiniteException();
 		Iterator<E> iterator = this.iterator();
 
 		while (iterator.hasNext()) {
@@ -34,7 +37,8 @@ public abstract class LazyStream<E> implements Stream<E> {
 
 	@Override
 	public boolean matchAny(Predicate<? super E> predicate) {
-		if(!isFinite) throw new IsInfiniteException();
+		if (!isFinite)
+			throw new IsInfiniteException();
 		Iterator<E> iterator = this.iterator();
 
 		while (iterator.hasNext()) {
@@ -47,7 +51,8 @@ public abstract class LazyStream<E> implements Stream<E> {
 
 	@Override
 	public int countAll() {
-		if(!isFinite) throw new IsInfiniteException();
+		if (!isFinite)
+			throw new IsInfiniteException();
 
 		Iterator<E> iterator = this.iterator();
 
@@ -62,7 +67,8 @@ public abstract class LazyStream<E> implements Stream<E> {
 
 	@Override
 	public int count(Predicate<? super E> predicate) {
-		if(!isFinite) throw new IsInfiniteException();
+		if (!isFinite)
+			throw new IsInfiniteException();
 		Iterator<E> iterator = this.iterator();
 
 		int i = 0;
@@ -73,26 +79,29 @@ public abstract class LazyStream<E> implements Stream<E> {
 		return i;
 	}
 
-	
 	@Override
 	public E get(int index) throws IndexOutOfBoundsException {
 		Iterator<E> it = iterator();
 
 		E e = null;
-		if(index < 0) throw new IndexOutOfBoundsException();
+		if (index < 0)
+			throw new IndexOutOfBoundsException();
 
-		//TODO check if again i'm not in the mood right now 
-		for (int i = 0; i < index; i++) {
-			if(!it.hasNext()) throw new IndexOutOfBoundsException();
+		// TODO check if again i'm not in the mood right now
+		for (int i = 0; i <= index; i++) {
+			if (!it.hasNext())
+				throw new IndexOutOfBoundsException();
+
 			e = it.next();
 		}
-		
+
 		return e;
 	}
 
 	@Override
 	public E find(Predicate<? super E> predicate) {
-		if(!isFinite) throw new IsInfiniteException();
+		if (!isFinite)
+			throw new IsInfiniteException();
 		Iterator<E> iterator = this.iterator();
 
 		while (iterator.hasNext()) {
@@ -107,7 +116,8 @@ public abstract class LazyStream<E> implements Stream<E> {
 
 	@Override
 	public E reduce(Operator<E> operator) {
-		if(!isFinite) throw new IsInfiniteException();
+		if (!isFinite)
+			throw new IsInfiniteException();
 		Iterator<E> iterator = this.iterator();
 
 		E e = null;
@@ -121,7 +131,8 @@ public abstract class LazyStream<E> implements Stream<E> {
 
 	@Override
 	public List<E> toList() {
-		if(!isFinite) throw new IsInfiniteException();
+		if (!isFinite)
+			throw new IsInfiniteException();
 		Iterator<E> iterator = this.iterator();
 		List<E> list = new LinkedList<>();
 
@@ -185,34 +196,45 @@ public abstract class LazyStream<E> implements Stream<E> {
 
 	@Override
 	public Stream<E> filter(Predicate<? super E> predicate) {
-		if(!isFinite) throw new IsInfiniteException();
+		if (!isFinite)
+			throw new IsInfiniteException();
 
-		final Stream<E> thisStream = this;
+		Stream<E> thisStream = this;
 
-//		final Stream<E> newStream = new LazyStream<E>() {
-//
-//			@Override
-//			public Iterator iterator() {
-//				return new Iterator<E>() {
-//
-//					final Iterator<E> thisIterator = thisStream.iterator();
-//
-//					@Override
-//					public boolean hasNext() {
-//						return predicate.test(thisIterator.next());
-//					}
-//
-//					@Override
-//					public E next() {
-//						if(predicate.test(thisIterator.next()))
-//						return null;
-//					}
-//				};
-//			}
-//
-//		};
+		Stream<E> newStream = new LazyStream<E>() {
 
-		return thisStream;
+			E lastReturnedElem = null;
+
+			@Override
+			public Iterator<E> iterator() {
+				return new Iterator<E>() {
+
+					Iterator<E> thisIterator = thisStream.iterator();
+
+					@Override
+					public boolean hasNext() {
+						
+						while(thisIterator.hasNext()) {
+							//TODO HOW?
+						}
+
+						//not 100% true but an other solution would be very complex
+						return thisIterator.hasNext();
+					}
+
+					@Override
+					public E next() {
+						while (true) {
+							E e = thisIterator.next();
+							if (predicate.test(e))
+								return e;
+						}
+					}
+				};
+			}
+		};
+
+		return newStream;
 	}
 
 	public <F> Stream<F> map(Mapping<? super E, ? extends F> mapping) {
