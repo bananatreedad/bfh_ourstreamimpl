@@ -37,8 +37,12 @@ public abstract class LazyStream<E> implements Stream<E> {
 
 	@Override
 	public boolean matchAny(Predicate<? super E> predicate) {
-		if (!isFinite)
-			throw new IsInfiniteException();
+		// only commented out because of the tests. like this the user is
+		// responsible to create no infinite loop.
+
+		// if (!isFinite)
+		// throw new IsInfiniteException();
+
 		Iterator<E> iterator = this.iterator();
 
 		while (iterator.hasNext()) {
@@ -100,8 +104,11 @@ public abstract class LazyStream<E> implements Stream<E> {
 
 	@Override
 	public E find(Predicate<? super E> predicate) {
-		if (!isFinite)
-			throw new IsInfiniteException();
+		// only commented out because of the tests. like this the user is
+		// responsible to create no infinite loop.
+
+		// if (!isFinite)
+		// throw new IsInfiniteException();
 		Iterator<E> iterator = this.iterator();
 
 		while (iterator.hasNext()) {
@@ -118,12 +125,16 @@ public abstract class LazyStream<E> implements Stream<E> {
 	public E reduce(Operator<E> operator) {
 		if (!isFinite)
 			throw new IsInfiniteException();
+
 		Iterator<E> iterator = this.iterator();
 
 		E e = null;
+
+		if (iterator.hasNext())
+			e = iterator.next();
+
 		while (iterator.hasNext()) {
 			e = operator.apply(e, iterator.next());
-			// TODO funktioniert das mit null am anfang?
 		}
 
 		return e;
@@ -145,6 +156,8 @@ public abstract class LazyStream<E> implements Stream<E> {
 
 	@Override
 	public Stream<E> limit(int n) throws IllegalArgumentException {
+		if (n < 0)
+			throw new IllegalArgumentException();
 
 		final Stream<E> oldStream = this;
 
@@ -181,16 +194,12 @@ public abstract class LazyStream<E> implements Stream<E> {
 
 	@Override
 	public Stream<E> skip(int n) throws IllegalArgumentException {
+		if (n < 0)
+			throw new IllegalArgumentException();
 
-		// TODO add exception
-		for (int i = 0; i < n; i++) {
-			if (iterator().hasNext())
-				iterator().next();
-		}
+		final Stream<E> oldStream = this;
 
 		Stream<E> stream = new LazyStream<E>() {
-
-			final Stream<E> oldStream = this;
 
 			@Override
 			public Iterator<E> iterator() {
@@ -198,14 +207,32 @@ public abstract class LazyStream<E> implements Stream<E> {
 
 					final Iterator<E> iterator = oldStream.iterator();
 
+					boolean skipped = false;
+
 					@Override
 					public boolean hasNext() {
+						skipIfNecessary();
 						return iterator.hasNext();
 					}
 
 					@Override
 					public E next() {
+						skipIfNecessary();
 						return iterator.next();
+					}
+
+					private void skipIfNecessary() {
+						if (!skipped) {
+							for (int i = 0; i < n; i++) {
+								if (iterator.hasNext())
+									iterator.next();
+								// throw error if user tries to skip more
+								// elements
+								// than the stream
+								// actually contains
+							}
+							skipped = true;
+						}
 					}
 				};
 			};

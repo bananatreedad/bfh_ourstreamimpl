@@ -48,6 +48,12 @@ public class MyTests {
 		System.out.println(it5.next());
 		System.out.println(it5.next());
 		System.out.println(it5.next());
+		
+		System.out.println("###foreach###");
+		stream.filter(x -> true).forEach(System.out::println);
+		
+		System.out.println("####skip####");
+		stream.skip(3).forEach(System.out::println);
 
 //		System.out.println(it5.next());
 //		System.out.println(it5.next());
