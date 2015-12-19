@@ -13,27 +13,29 @@ public class ArrayStream<E> extends LazyStream<E>{
  	
 	ArrayList<E> list = new ArrayList<>();
 	
+	private E[] array;
+
 	@SafeVarargs
 	public ArrayStream(E... args) {
-		for (E e : args) {
-			list.add(e);
-		}
+		array = args;
 	}
 
 	@Override
 	public Iterator<E> iterator() {
 		return new Iterator<E>() {
+			
+			int currentIndex = 0;
 
 			@Override
 			public boolean hasNext() {
-				// TODO Auto-generated method stub
-				return false;
+				return currentIndex < array.length;
 			}
 
 			@Override
 			public E next() {
-				// TODO Auto-generated method stub
-				return null;
+				E e = array[currentIndex];
+				currentIndex++;
+				return e;
 			}
 		};
 	}
