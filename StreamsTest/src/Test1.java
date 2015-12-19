@@ -21,6 +21,7 @@ public class Test1 {
 		
 		System.out.println("#####");
 		stringCollection.stream().limit(3).forEach(System.out::println);;
+		stringCollection.stream().reduce()
 		
 //		printVarArgs("asdf", "asdf", "uio");
 
