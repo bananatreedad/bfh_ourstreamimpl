@@ -5,8 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import com.sun.org.apache.bcel.internal.generic.RETURN;
-
 import exceptions.IsInfiniteException;
 
 import interfaces.Mapping;
@@ -15,13 +13,12 @@ import interfaces.Predicate;
 import interfaces.Stream;
 
 /**
- * Implements all the methods of the {@link Stream<E>} interface except
- * {@link Iterator<E>} iterator().
+ * Implements all the methods of the {@link Stream} interface except
+ * {@link Iterator} iterator().
  * <p>
  * "Lazy" means that the elements of the stream are not stored explicitly, they
  * are computed only when a terminal operation (see below) is called.
  * 
- * @param <E>
  */
 public abstract class LazyStream<E> implements Stream<E> {
 
@@ -47,7 +44,8 @@ public abstract class LazyStream<E> implements Stream<E> {
 	 */
 	@Override
 	public boolean matchAll(Predicate<? super E> predicate) {
-		// iterating over 'all' elements in an infinite Stream would create an endless loop
+		// iterating over 'all' elements in an infinite Stream would create an
+		// endless loop
 		if (!isFinite)
 			throw new IsInfiniteException();
 
@@ -96,7 +94,8 @@ public abstract class LazyStream<E> implements Stream<E> {
 	 */
 	@Override
 	public int countAll() {
-		// iterating over 'all' elements in an infinite Stream would create an endless loop
+		// iterating over 'all' elements in an infinite Stream would create an
+		// endless loop
 		if (!isFinite)
 			throw new IsInfiniteException();
 
@@ -112,15 +111,18 @@ public abstract class LazyStream<E> implements Stream<E> {
 	}
 
 	/**
-	 * Counts all the elements of the {@link LazyStream} matching the given {@link Predicate}.
+	 * Counts all the elements of the {@link LazyStream} matching the given
+	 * {@link Predicate}.
 	 * 
-	 * @param predicate The predicate to match.
+	 * @param predicate
+	 *            The predicate to match.
 	 * 
 	 * @return The number of elements the {@link LazyStream} contains.
 	 */
 	@Override
 	public int count(Predicate<? super E> predicate) {
-		// iterating over 'all' elements in an infinite Stream would create an endless loop
+		// iterating over 'all' elements in an infinite Stream would create an
+		// endless loop
 		if (!isFinite)
 			throw new IsInfiniteException();
 
@@ -137,10 +139,11 @@ public abstract class LazyStream<E> implements Stream<E> {
 	/**
 	 * Gets the element of a specific index out of the {@link LazyStream}.
 	 * 
-	 * @param index The index of the wanted element.
+	 * @param index
+	 *            The index of the wanted element.
 	 * 
 	 * @return Element at the given index.
-	 */ 
+	 */
 	@Override
 	public E get(int index) throws IndexOutOfBoundsException {
 		Iterator<E> it = iterator();
@@ -160,7 +163,13 @@ public abstract class LazyStream<E> implements Stream<E> {
 	}
 
 	/**
-	 * Finds and returns the first element in the {@link LazyStream} that matches the given {@link Predicate};
+	 * Finds and returns the first element in the {@link LazyStream} that
+	 * matches the given {@link Predicate}.
+	 * 
+	 * @param predicate
+	 *            The {@link Predicate} to match.
+	 * 
+	 * @return The first found element matching the {@link Predicate}.
 	 */
 	@Override
 	public E find(Predicate<? super E> predicate) {
@@ -181,8 +190,20 @@ public abstract class LazyStream<E> implements Stream<E> {
 		return null;
 	}
 
+	/**
+	 * Reduces the whole {@link LazyStream} to one object, following the
+	 * behavior given with {@link Operator}.
+	 * 
+	 * @param The
+	 *            {@link Operator} after one the {@link LazyStream} stream
+	 *            should be reduced.
+	 * 
+	 * @return The resting element.
+	 */
 	@Override
 	public E reduce(Operator<E> operator) {
+		// iterating over 'all' elements in an infinite Stream would create an
+		// endless loop
 		if (!isFinite)
 			throw new IsInfiniteException();
 
@@ -190,8 +211,8 @@ public abstract class LazyStream<E> implements Stream<E> {
 
 		E e = null;
 
-		if (iterator.hasNext())
-			e = iterator.next();
+		//getting the first element
+		if (iterator.hasNext())	e = iterator.next();
 
 		while (iterator.hasNext()) {
 			e = operator.apply(e, iterator.next());
@@ -200,10 +221,18 @@ public abstract class LazyStream<E> implements Stream<E> {
 		return e;
 	}
 
+	/**
+	 * Creates a list containing all elements in this {@link LazyStream}.
+	 * 
+	 * @return The list containing all elements of the {@link LazyStream}.
+	 */
 	@Override
 	public List<E> toList() {
+		// iterating over 'all' elements in an infinite Stream would create an
+		// endless loop
 		if (!isFinite)
 			throw new IsInfiniteException();
+
 		Iterator<E> iterator = this.iterator();
 		List<E> list = new LinkedList<>();
 
@@ -214,8 +243,16 @@ public abstract class LazyStream<E> implements Stream<E> {
 		return list;
 	}
 
+	/**
+	 * Limits the @link {@link LazyStream} to the given number of elements. Very useful on infinite elements (see {@link #setInfinite}).
+	 * 
+	 * @param n The maximal number of elements the new @link {@link LazyStream} should contain.
+	 * 
+	 * @return The @link {@link LazyStream} containing the maximal <code>n</code> elements.
+	 */
 	@Override
 	public Stream<E> limit(int n) throws IllegalArgumentException {
+		//TODO here I am with commenting
 		if (n < 0)
 			throw new IllegalArgumentException();
 

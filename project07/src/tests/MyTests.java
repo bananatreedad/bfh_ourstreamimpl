@@ -55,11 +55,10 @@ public class MyTests {
 		System.out.println("####skip####");
 		stream.skip(3).forEach(System.out::println);
 
-//		System.out.println(it5.next());
-//		System.out.println(it5.next());
-//		System.out.println(it5.next());
-//		System.out.println(it5.next());
-//		System.out.println(it5.next());
-
+		System.out.println("###limit###");
+		SeededStream<Integer> stream2 = new SeededStream<Integer>(1, x -> x + 2);
+		//endless loop 
+		//stream2.forEach(System.out::println);
+		System.out.println(stream2.limit(5).countAll());
 	}
 }
