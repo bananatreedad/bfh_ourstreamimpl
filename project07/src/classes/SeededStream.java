@@ -7,8 +7,8 @@ import interfaces.Predicate;
 public class SeededStream<E> extends LazyStream<E> {
 	
 	private E seed;
-	Mapping<E, E> update;
-	Predicate<E> condition = null;
+	private Mapping<E, E> update;
+	private Predicate<E> condition = null;
 	
 	public SeededStream(E seed, Mapping<E, E> update) {
 		this.seed = seed;

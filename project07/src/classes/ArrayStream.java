@@ -2,12 +2,6 @@ package classes;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
-
-import interfaces.Mapping;
-import interfaces.Operator;
-import interfaces.Predicate;
-import interfaces.Stream;
 
 public class ArrayStream<E> extends LazyStream<E>{
  	

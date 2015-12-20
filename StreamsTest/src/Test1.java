@@ -1,6 +1,11 @@
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class was created to test the behavior of the native String library of Java.
+ * It makes no contribution to the project.
+ *
+ */
 public class Test1 {
 
 	public static void main(String... args) {
@@ -16,17 +21,18 @@ public class Test1 {
 
 //		System.out.println(stringCollection.stream().allMatch(x -> x.contains("")));
 //		stringCollection.stream().filter(x -> x.contains("b")).forEach(x -> System.out.println(x));
-
 //		stringCollection.stream().skip(2).forEach(System.out::println);
-		
-		System.out.println("#####");
-		stringCollection.stream().limit(3).forEach(System.out::println);;
-		stringCollection.stream().reduce()
-		
 //		printVarArgs("asdf", "asdf", "uio");
+
+		stringCollection.stream().limit(3).forEach(System.out::println);;
 
 	}
 	
+	/**
+	 * This function was created to test the behavior of VarArgs. 
+	 * 
+	 * @param strings
+	 */
 	public static void printVarArgs(String... strings) {
 		
 		for (String string : strings) {

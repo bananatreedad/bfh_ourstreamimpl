@@ -293,8 +293,6 @@ public abstract class LazyStream<E> implements Stream<E> {
 
 	public <F> Stream<F> map(Mapping<? super E, ? extends F> mapping) {
 
-		// TODO this is the example solved with teacher
-
 		final Stream<E> thisStream = this;
 
 		Stream<F> newStream = new LazyStream<F>() {
