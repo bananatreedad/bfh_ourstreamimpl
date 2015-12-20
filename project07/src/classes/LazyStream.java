@@ -5,26 +5,52 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import com.sun.org.apache.bcel.internal.generic.RETURN;
+
 import exceptions.IsInfiniteException;
+
 import interfaces.Mapping;
 import interfaces.Operator;
 import interfaces.Predicate;
 import interfaces.Stream;
 
+/**
+ * Implements all the methods of the {@link Stream<E>} interface except
+ * {@link Iterator<E>} iterator().
+ * <p>
+ * "Lazy" means that the elements of the stream are not stored explicitly, they
+ * are computed only when a terminal operation (see below) is called.
+ * 
+ * @param <E>
+ */
 public abstract class LazyStream<E> implements Stream<E> {
 
 	private boolean isFinite = true;
 
-	// a child class is able to set itself to infinite
+	/**
+	 * With this function a child class is able to set itself to infinite, e.g.
+	 * a {@link SeededStream} without an ending condition.
+	 * <p>
+	 */
 	protected void setInfinite() {
 		isFinite = false;
 	}
 
-	// <3
+	/**
+	 * Checks if every element of the {@link LazyStream} matches the given
+	 * predicate.
+	 * 
+	 * @param predicate
+	 *            The predicate to match.
+	 * 
+	 * @return True if all elements are matching the given predicate.
+	 */
 	@Override
 	public boolean matchAll(Predicate<? super E> predicate) {
+		// iterating over 'all' elements in an infinite Stream would create an endless loop
 		if (!isFinite)
 			throw new IsInfiniteException();
+
 		Iterator<E> iterator = this.iterator();
 
 		while (iterator.hasNext()) {
@@ -35,6 +61,16 @@ public abstract class LazyStream<E> implements Stream<E> {
 		return true;
 	}
 
+	/**
+	 * Checks if minimum one element of the {@link LazyStream} matches the given
+	 * predicate.
+	 * 
+	 * @param predicate
+	 *            The predicate to match.
+	 * 
+	 * @return True if predicate matches one ore more elements.
+	 * 
+	 */
 	@Override
 	public boolean matchAny(Predicate<? super E> predicate) {
 		// only commented out because of the tests. like this the user is
@@ -53,8 +89,14 @@ public abstract class LazyStream<E> implements Stream<E> {
 		return false;
 	}
 
+	/**
+	 * Counts all the elements of the {@link LazyStream}.
+	 * 
+	 * @return The number of elements the {@link LazyStream} contains.
+	 */
 	@Override
 	public int countAll() {
+		// iterating over 'all' elements in an infinite Stream would create an endless loop
 		if (!isFinite)
 			throw new IsInfiniteException();
 
@@ -69,10 +111,19 @@ public abstract class LazyStream<E> implements Stream<E> {
 		return i;
 	}
 
+	/**
+	 * Counts all the elements of the {@link LazyStream} matching the given {@link Predicate}.
+	 * 
+	 * @param predicate The predicate to match.
+	 * 
+	 * @return The number of elements the {@link LazyStream} contains.
+	 */
 	@Override
 	public int count(Predicate<? super E> predicate) {
+		// iterating over 'all' elements in an infinite Stream would create an endless loop
 		if (!isFinite)
 			throw new IsInfiniteException();
+
 		Iterator<E> iterator = this.iterator();
 
 		int i = 0;
@@ -83,6 +134,13 @@ public abstract class LazyStream<E> implements Stream<E> {
 		return i;
 	}
 
+	/**
+	 * Gets the element of a specific index out of the {@link LazyStream}.
+	 * 
+	 * @param index The index of the wanted element.
+	 * 
+	 * @return Element at the given index.
+	 */ 
 	@Override
 	public E get(int index) throws IndexOutOfBoundsException {
 		Iterator<E> it = iterator();
@@ -91,7 +149,6 @@ public abstract class LazyStream<E> implements Stream<E> {
 		if (index < 0)
 			throw new IndexOutOfBoundsException();
 
-		// TODO check if again i'm not in the mood right now
 		for (int i = 0; i <= index; i++) {
 			if (!it.hasNext())
 				throw new IndexOutOfBoundsException();
@@ -102,6 +159,9 @@ public abstract class LazyStream<E> implements Stream<E> {
 		return e;
 	}
 
+	/**
+	 * Finds and returns the first element in the {@link LazyStream} that matches the given {@link Predicate};
+	 */
 	@Override
 	public E find(Predicate<? super E> predicate) {
 		// only commented out because of the tests. like this the user is
