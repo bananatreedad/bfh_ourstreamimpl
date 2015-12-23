@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * This class was created to test the behavior of the native String library of Java.
@@ -24,8 +25,17 @@ public class Test1 {
 //		stringCollection.stream().skip(2).forEach(System.out::println);
 //		printVarArgs("asdf", "asdf", "uio");
 
-		stringCollection.stream().limit(3).forEach(System.out::println);;
+//		stringCollection.stream().limit(3).forEach(System.out::println);;
+		
+		Consumer<String> ourCons = new Consumer<String>() {
 
+			@Override
+			public void accept(String t) {
+				System.out.println("hello " + t + "!");
+			}
+		};
+		
+		ourCons.accept("Chris");
 	}
 	
 	/**
