@@ -1,99 +1,41 @@
 package classes;
 
 import java.util.Iterator;
-import java.util.List;
-
 import interfaces.Mapping;
-import interfaces.Operator;
 import interfaces.Predicate;
-import interfaces.Stream;
 
-public class SeededStream<E> implements Stream<E> {
+public class SeededStream<E> extends LazyStream<E> {
+	
+	E seed;
+	Mapping<E, E> update;
+	Predicate<E> condition = null;
 	
 	public SeededStream(E seed, Mapping<E, E> update) {
-		
+		this.seed = seed;
+		this.update = update;
 	}
 
 	public SeededStream(E seed, Mapping<E, E> update, Predicate<E> condition) {
-		
+		this.condition = condition;
 	}
 
 	@Override
 	public Iterator<E> iterator() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		Iterator<E> it = new Iterator<E>() {
 
-	@Override
-	public boolean matchAll(Predicate<? super E> predicate) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+			@Override
+			public boolean hasNext() {
+				boolean hasNext = true;
+				if(condition != null) hasNext = condition.test(seed);
+				return hasNext;
+			}
 
-	@Override
-	public boolean matchAny(Predicate<? super E> predicate) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+			@Override
+			public E next() {
+				return update.apply(seed);
+			}
+		};
 
-	@Override
-	public int countAll() {
-		// TODO Auto-generated method stub
-		return 0;
+		return it;
 	}
-
-	@Override
-	public int count(Predicate<? super E> predicate) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public E get(int index) throws IndexOutOfBoundsException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public E find(Predicate<? super E> predicate) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public E reduce(Operator<E> operator) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<E> toList() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Stream<E> limit(int n) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Stream<E> skip(int n) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Stream<E> filter(Predicate<? super E> predicate) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public <F> Stream<F> map(Mapping<? super E, ? extends F> mapping) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }
