@@ -288,9 +288,7 @@ public abstract class LazyStream<E> implements Stream<E> {
 
 		return stream;
 	}
-/**
- * :)
- */
+
 	@Override
 	public Stream<E> skip(int n) throws IllegalArgumentException {
 		if (n < 0)
@@ -390,9 +388,6 @@ public abstract class LazyStream<E> implements Stream<E> {
 		return newStream;
 	}
 
-	/**
-	 * bananatreedads test
-	 */
 	public <F> Stream<F> map(Mapping<? super E, ? extends F> mapping) {
 
 		final Stream<E> thisStream = this;
