@@ -88,6 +88,7 @@ public class MyTests {
 		//return a new filter containing the even numbers
 		Stream<Integer> stream2Even = stream2.filter(x -> x % 2 == 0);
 
+		//do for each entry in stream2Even
 		stream2Even.forEach(x -> {
 			System.out.print("blabla ");
 			System.out.print(x + " ");
@@ -97,5 +98,6 @@ public class MyTests {
 		Stream<String> stream2String = stream2.map(x -> "Nummer: " + x);
 		stream2String.forEach(System.out::println);
 
+		stream2.count(x -> x == 2);
 	}
 }
