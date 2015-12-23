@@ -388,6 +388,9 @@ public abstract class LazyStream<E> implements Stream<E> {
 		return newStream;
 	}
 
+	/**
+	 * bananatreedads test
+	 */
 	public <F> Stream<F> map(Mapping<? super E, ? extends F> mapping) {
 
 		final Stream<E> thisStream = this;
