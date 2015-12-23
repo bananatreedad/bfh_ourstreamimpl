@@ -13,7 +13,6 @@ public class SeededStreamTest {
 	@Test
 	public void test_get1() {
 		Stream<Integer> stream = new SeededStream<>(1, x -> x + 1, x -> x <= 10);
-
 		Assert.assertEquals((Integer) 1, stream.get(0));
 		Assert.assertEquals((Integer) 2, stream.get(1));
 		Assert.assertEquals((Integer) 3, stream.get(2));
@@ -154,6 +153,7 @@ public class SeededStreamTest {
 		Assert.assertEquals(9, stream.limit(9).countAll());
 		Assert.assertEquals(1, stream.limit(1).countAll());
 		Assert.assertEquals(0, stream.limit(0).countAll());
+
 		try {
 			stream.limit(-1).countAll();
 			Assert.fail();
