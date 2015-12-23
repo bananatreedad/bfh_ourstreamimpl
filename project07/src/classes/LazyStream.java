@@ -290,8 +290,13 @@ public abstract class LazyStream<E> implements Stream<E> {
 	}
 
 
-	//test blabla
-	//add
+	/**
+	 * returns a new LazyStream object starting at the given Index n of the input LazyStream object. I.e. skipping all the elements at Index 0 until<code>n</code>.
+	 * 
+	 * @param n Represents the Index of the input LazyStream
+	 * 
+	 * @return A new @link {@link LazyStream} containing the elements of the input LazyStream following the Index <code>n</code> i.e. skipping all the elements at Index 0 until <code>n</code>. 
+	 */
 	@Override
 	public Stream<E> skip(int n) throws IllegalArgumentException {
 		if (n < 0)
