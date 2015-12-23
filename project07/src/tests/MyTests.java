@@ -94,7 +94,7 @@ public class MyTests {
 			System.out.print(x + " ");
 		});
 		
-		//map Integer to String
+		//mapping Integer to String
 		Stream<String> stream2String = stream2.map(x -> "Nummer: " + x);
 		stream2String.forEach(System.out::println);
 
