@@ -291,7 +291,7 @@ public abstract class LazyStream<E> implements Stream<E> {
 
 
 	//test blabla
-
+	//add
 	@Override
 	public Stream<E> skip(int n) throws IllegalArgumentException {
 		if (n < 0)
