@@ -407,7 +407,7 @@ public abstract class LazyStream<E> implements Stream<E> {
 	/**
 	 * Applies a given function on every element of the input @link {@link LazyStream}
 	 * 
-	 * @param mapping Represents a given function as a Lambda-expression.
+	 * @param mapping Represents a given function in form of a Lambda-expression.
 	 * 
 	 * @return A new @link {@link LazyStream} applying a given function on every element of the input @link {@link LazyStream}.
 	 */
