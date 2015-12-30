@@ -291,7 +291,7 @@ public abstract class LazyStream<E> implements Stream<E> {
 
 
 	/**
-	 * returns a new LazyStream object starting at the given Index n of the input LazyStream object. I.e. skipping all the elements at Index 0 until<code>n</code>.
+	 * returns a new @link {@link LazyStream} object starting at the given Index n of the input @link {@link LazyStream} object. I.e. skipping all the elements at Index 0 until<code>n</code>.
 	 * 
 	 * @param n Represents the Index of the input LazyStream
 	 * 
@@ -346,6 +346,14 @@ public abstract class LazyStream<E> implements Stream<E> {
 		return stream;
 	}
 
+	/**
+	 * Sorts out all the elements of the input @link {@link LazyStream} that don't comply with the predicate condition.
+	 * 
+	 * @param predicate Represents a filter-condition in form of a Lambda-expression. 
+	 * 
+	 * @return A new @link {@link LazyStream} object containing all the elements of the input @link {@link LazyStream} except the elements that don't comply with the predicate condition.
+	 */
+	
 	@Override
 	public Stream<E> filter(Predicate<? super E> predicate) {
 
@@ -396,6 +404,14 @@ public abstract class LazyStream<E> implements Stream<E> {
 		return newStream;
 	}
 
+	/**
+	 * Applies a given function on every element of the input @link {@link LazyStream}
+	 * 
+	 * @param mapping Represents a given function in form of a Lambda-expression.
+	 * 
+	 * @return A new @link {@link LazyStream} applying a given function on every element of the input @link {@link LazyStream}.
+	 */
+	
 	public <F> Stream<F> map(Mapping<? super E, ? extends F> mapping) {
 
 		final Stream<E> thisStream = this;
