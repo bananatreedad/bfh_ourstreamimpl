@@ -1,12 +1,16 @@
 package tests;
 
 import java.util.Iterator;
-import java.util.function.Consumer;
 
 import classes.SeededStream;
 import interfaces.Stream;
 
-public class MyTests {
+/**
+ * Tests we needed to do some tests more about our {@link Stream}-Implementation
+ * than the given JUnit tests.
+ *
+ */
+public class OurTests {
 
 	public static void main(String[] args) {
 		SeededStream<Integer> stream = new SeededStream<Integer>(1, x -> x + 1, x -> x < 10);
@@ -41,60 +45,54 @@ public class MyTests {
 		System.out.println(it4.next());
 		System.out.println(it4.next());
 		System.out.println(it4.next());
-		
-		
+
 		System.out.println("###it5###");
-		Iterator<Integer> it5 = stream.limit(2).iterator(); 
+		Iterator<Integer> it5 = stream.limit(2).iterator();
 
 		System.out.println(it5.next());
 		System.out.println(it5.next());
 		System.out.println(it5.next());
-		
+
 		System.out.println("###foreach###");
 		stream.filter(x -> true).forEach(System.out::println);
-		
+
 		System.out.println("####skip####");
 		stream.skip(3).forEach(System.out::println);
 
 		System.out.println("###limit###");
 		SeededStream<Integer> stream2 = new SeededStream<Integer>(1, x -> x + 2);
-		//endless loop 
-		//stream2.forEach(System.out::println);
+		// endless loop
+		// stream2.forEach(System.out::println);
 		System.out.println(stream2.limit(5).countAll());
-		
+
 		tests2();
 	}
-	
-	/**
-	 * These tests were needed to clear up the functionality of the {@link Stream} inside the team.
-	 * 
-	 */
+
 	private static void tests2() {
 
-		SeededStream<String> stream = 
-				new SeededStream<String>("", x -> x + "X", x -> x.length() < 20);
-		
-//		stream.forEach(System.out::println);
+		SeededStream<String> stream = new SeededStream<String>("", x -> x + "X", x -> x.length() < 20);
+
+		// stream.forEach(System.out::println);
 
 		String s = stream.reduce((param1, param2) -> param1 + param2);
 		System.out.println(s.length());
-		
+
 		System.out.println(stream.skip(19).countAll());
-		
+
 		SeededStream<Integer> stream2 = new SeededStream<Integer>(0, x -> x + 1, x -> x < 10);
-		
+
 		System.out.println(stream2.countAll());
-		
-		//return a new filter containing the even numbers
+
+		// return a new filter containing the even numbers
 		Stream<Integer> stream2Even = stream2.filter(x -> x % 2 == 0);
 
-		//do for each entry in stream2Even
+		// do for each entry in stream2Even
 		stream2Even.forEach(x -> {
 			System.out.print("blabla ");
 			System.out.print(x + " ");
 		});
-		
-		//mapping Integer to String
+
+		// mapping Integer to String
 		Stream<String> stream2String = stream2.map(x -> "Nummer: " + x);
 		stream2String.forEach(System.out::println);
 

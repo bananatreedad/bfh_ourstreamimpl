@@ -3,6 +3,9 @@ package classes;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/**
+ * Constructs a stream from an array, which is the "source" of the stream.
+ */
 public class ArrayStream<E> extends LazyStream<E>{
  	
 	ArrayList<E> list = new ArrayList<>();

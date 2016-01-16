@@ -22,6 +22,11 @@ import interfaces.Stream;
  */
 public abstract class LazyStream<E> implements Stream<E> {
 
+	/**
+	 * A LazyStream can be finite or infinite. There are operations you should
+	 * not be able to use if the stream is infinite as e.g.
+	 * {@link #find(Predicate)}.
+	 */
 	private boolean isFinite = true;
 
 	/**
@@ -211,8 +216,9 @@ public abstract class LazyStream<E> implements Stream<E> {
 
 		E e = null;
 
-		//getting the first element
-		if (iterator.hasNext())	e = iterator.next();
+		// getting the first element
+		if (iterator.hasNext())
+			e = iterator.next();
 
 		while (iterator.hasNext()) {
 			e = operator.apply(e, iterator.next());
@@ -244,15 +250,18 @@ public abstract class LazyStream<E> implements Stream<E> {
 	}
 
 	/**
-	 * Limits the @link {@link LazyStream} to the given number of elements. Very useful on infinite elements (see {@link #setInfinite}).
+	 * Limits the @link {@link LazyStream} to the given number of elements. Very
+	 * useful on infinite elements (see {@link #setInfinite}).
 	 * 
-	 * @param n The maximal number of elements the new @link {@link LazyStream} should contain.
+	 * @param n
+	 *            The maximal number of elements the new @link
+	 *            {@link LazyStream} should contain.
 	 * 
-	 * @return The @link {@link LazyStream} containing the maximal <code>n</code> elements.
+	 * @return The @link {@link LazyStream} containing the maximal
+	 *         <code>n</code> elements.
 	 */
 	@Override
 	public Stream<E> limit(int n) throws IllegalArgumentException {
-		//TODO here I am with commenting
 		if (n < 0)
 			throw new IllegalArgumentException();
 
@@ -289,13 +298,13 @@ public abstract class LazyStream<E> implements Stream<E> {
 		return stream;
 	}
 
-
 	/**
-	 * returns a new @link {@link LazyStream} object starting at the given Index n of the input @link {@link LazyStream} object. I.e. skipping all the elements at Index 0 until<code>n</code>.
+	 * Returns a new {@link LazyStream} object, skipping the first
+	 * <code>n</code> elements.
 	 * 
-	 * @param n Represents the Index of the input LazyStream
+	 * @param n
+	 *            Number of elements that should be skipped.
 	 * 
-	 * @return A new @link {@link LazyStream} containing the elements of the input LazyStream following the Index <code>n</code> i.e. skipping all the elements at Index 0 until <code>n</code>. 
 	 */
 	@Override
 	public Stream<E> skip(int n) throws IllegalArgumentException {
@@ -347,13 +356,18 @@ public abstract class LazyStream<E> implements Stream<E> {
 	}
 
 	/**
-	 * Sorts out all the elements of the input @link {@link LazyStream} that don't comply with the predicate condition.
+	 * Sorts out all the elements of the input {@link LazyStream} that don't
+	 * comply with the predicate condition and returns a new {@link LazyStream}
+	 * containing the remaining elements.
 	 * 
-	 * @param predicate Represents a filter-condition in form of a Lambda-expression. 
+	 * @param predicate
+	 *            Represents a filter-condition in form of a Lambda-expression.
 	 * 
-	 * @return A new @link {@link LazyStream} object containing all the elements of the input @link {@link LazyStream} except the elements that don't comply with the predicate condition.
+	 * @return A new @link {@link LazyStream} object containing all the elements
+	 *         of the input @link {@link LazyStream} except the elements that
+	 *         don't comply with the predicate condition.
 	 */
-	
+
 	@Override
 	public Stream<E> filter(Predicate<? super E> predicate) {
 
@@ -405,13 +419,18 @@ public abstract class LazyStream<E> implements Stream<E> {
 	}
 
 	/**
-	 * Applies a given function on every element of the input @link {@link LazyStream}
+	 * Applies a given function on every element of the given {@link LazyStream}
+	 * (of type <code>E</code> which returns another specified datatype
+	 * <code>F</code>. Like this, all containing elements are going to be
+	 * 'mapped' to the other datatype <code>F</code>.
 	 * 
-	 * @param mapping Represents a given function in form of a Lambda-expression.
+	 * @param mapping
+	 *            The specific mapping from <code>E</code> to <code>F</code> as
+	 *            Lamda-Expression.
 	 * 
-	 * @return A new @link {@link LazyStream} applying a given function on every element of the input @link {@link LazyStream}.
+	 * @return A new {@link LazyStream} containing the mapped <code>F</code>
+	 *         -elements.
 	 */
-	
 	public <F> Stream<F> map(Mapping<? super E, ? extends F> mapping) {
 
 		final Stream<E> thisStream = this;
