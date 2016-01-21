@@ -1,4 +1,4 @@
-package classes;
+package classes.teacherCorr;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -6,41 +6,40 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import exceptions.IsInfiniteException;
-
 import interfaces.Mapping;
 import interfaces.Operator;
 import interfaces.Predicate;
 import interfaces.Stream;
 
 /**
- * Implements all the methods of the {@link Stream} interface except
- * {@link Iterator} iterator().
+ * Implements all the methods of the {@link Stream} interface except {@link Iterator} iterator().
  * <p>
- * "Lazy" means that the elements of the stream are not stored explicitly, they
- * are computed only when a terminal operation (see below) is called.
+ * "Lazy" means that the elements of the stream are not stored explicitly, they are computed only when a terminal
+ * operation (see below) is called.
  * 
  */
 public abstract class LazyStream<E> implements Stream<E> {
 
 	/**
-	 * A LazyStream can be finite or infinite. There are operations you should
-	 * not be able to use if the stream is infinite as e.g.
-	 * {@link #find(Predicate)}.
+	 * A LazyStream can be finite or infinite. There are operations you should not be able to use if the stream is
+	 * infinite as e.g. {@link #find(Predicate)}.
 	 */
+	// KOMMENTAR: Ich empfehle, an dieser Stelle keine Zuweisung zu machen (ausser bei Kostanten). Das Zuweisen der
+	// Initialwerte ist Aufgabe der Konstruktoren, selbst im Fall von null/true/false/0.
 	private boolean isFinite = true;
 
 	/**
-	 * With this function a child class is able to set itself to infinite, e.g.
-	 * a {@link SeededStream} without an ending condition.
+	 * With this function a child class is able to set itself to infinite, e.g. a {@link SeededStream} without an ending
+	 * condition.
 	 * <p>
 	 */
+	// KOMMENTAR: Initialwerte würde ich immer im Konstrukor zuweisen, vor allem wenn diese sich nie ändern.
 	protected void setInfinite() {
 		isFinite = false;
 	}
 
 	/**
-	 * Checks if every element of the {@link LazyStream} matches the given
-	 * predicate.
+	 * Checks if every element of the {@link LazyStream} matches the given predicate.
 	 * 
 	 * @param predicate
 	 *            The predicate to match.
@@ -62,11 +61,19 @@ public abstract class LazyStream<E> implements Stream<E> {
 		}
 
 		return true;
+
+		// KOMMENTAR: Man könnte einfacher auch mittels For-Each-Loop testen:
+		// for (E element : this) {
+		// if (!predicate.test(element)) {
+		// return false;
+		// }
+		// }
+		// return true;
+
 	}
 
 	/**
-	 * Checks if minimum one element of the {@link LazyStream} matches the given
-	 * predicate.
+	 * Checks if minimum one element of the {@link LazyStream} matches the given predicate.
 	 * 
 	 * @param predicate
 	 *            The predicate to match.
@@ -90,6 +97,7 @@ public abstract class LazyStream<E> implements Stream<E> {
 		}
 
 		return false;
+		// KOMMENTAR: Gleicher Kommentar wie oben
 	}
 
 	/**
@@ -99,6 +107,9 @@ public abstract class LazyStream<E> implements Stream<E> {
 	 */
 	@Override
 	public int countAll() {
+		// KOMMENTAR: einfacher wäre count(Predicate) aufzurufen, also:
+		// return this.count(x -> true);
+
 		// iterating over 'all' elements in an infinite Stream would create an
 		// endless loop
 		if (!isFinite)
@@ -116,8 +127,7 @@ public abstract class LazyStream<E> implements Stream<E> {
 	}
 
 	/**
-	 * Counts all the elements of the {@link LazyStream} matching the given
-	 * {@link Predicate}.
+	 * Counts all the elements of the {@link LazyStream} matching the given {@link Predicate}.
 	 * 
 	 * @param predicate
 	 *            The predicate to match.
@@ -168,8 +178,7 @@ public abstract class LazyStream<E> implements Stream<E> {
 	}
 
 	/**
-	 * Finds and returns the first element in the {@link LazyStream} that
-	 * matches the given {@link Predicate}.
+	 * Finds and returns the first element in the {@link LazyStream} that matches the given {@link Predicate}.
 	 * 
 	 * @param predicate
 	 *            The {@link Predicate} to match.
@@ -196,17 +205,18 @@ public abstract class LazyStream<E> implements Stream<E> {
 	}
 
 	/**
-	 * Reduces the whole {@link LazyStream} to one object, following the
-	 * behavior given with {@link Operator}.
+	 * Reduces the whole {@link LazyStream} to one object, following the behavior given with {@link Operator}.
 	 * 
-	 * @param operator The
-	 *            {@link Operator} after one the {@link LazyStream} stream
-	 *            should be reduced.
+	 * @param The
+	 *            {@link Operator} after one the {@link LazyStream} stream should be reduced.
 	 * 
 	 * @return The resting element.
 	 */
 	@Override
 	public E reduce(Operator<E> operator) {
+		// KOMMENTAR: Wahrscheinlich wäre es besser, bei einem leeren Stream statt null eine Exception zu werfen. Das
+		// hatte ich aber nicht vorgegeben.
+
 		// iterating over 'all' elements in an infinite Stream would create an
 		// endless loop
 		if (!isFinite)
@@ -250,15 +260,13 @@ public abstract class LazyStream<E> implements Stream<E> {
 	}
 
 	/**
-	 * Limits the @link {@link LazyStream} to the given number of elements. Very
-	 * useful on infinite elements (see {@link #setInfinite}).
+	 * Limits the @link {@link LazyStream} to the given number of elements. Very useful on infinite elements (see
+	 * {@link #setInfinite}).
 	 * 
 	 * @param n
-	 *            The maximal number of elements the new @link
-	 *            {@link LazyStream} should contain.
+	 *            The maximal number of elements the new @link {@link LazyStream} should contain.
 	 * 
-	 * @return The @link {@link LazyStream} containing the maximal
-	 *         <code>n</code> elements.
+	 * @return The @link {@link LazyStream} containing the maximal <code>n</code> elements.
 	 */
 	@Override
 	public Stream<E> limit(int n) throws IllegalArgumentException {
@@ -299,8 +307,7 @@ public abstract class LazyStream<E> implements Stream<E> {
 	}
 
 	/**
-	 * Returns a new {@link LazyStream} object, skipping the first
-	 * <code>n</code> elements.
+	 * Returns a new {@link LazyStream} object, skipping the first <code>n</code> elements.
 	 * 
 	 * @param n
 	 *            Number of elements that should be skipped.
@@ -344,6 +351,10 @@ public abstract class LazyStream<E> implements Stream<E> {
 								// elements
 								// than the stream
 								// actually contains
+
+								// KOMMENTAR: Nicht unbedingt, weil man ja allgemein nicht weiss, wie lange der Stream
+								// ist. Würde skip ein exception werfen, müsste man diese immer abfangen, was mühsam
+								// wäre.
 							}
 							skipped = true;
 						}
@@ -356,16 +367,14 @@ public abstract class LazyStream<E> implements Stream<E> {
 	}
 
 	/**
-	 * Sorts out all the elements of the input {@link LazyStream} that don't
-	 * comply with the predicate condition and returns a new {@link LazyStream}
-	 * containing the remaining elements.
+	 * Sorts out all the elements of the input {@link LazyStream} that don't comply with the predicate condition and
+	 * returns a new {@link LazyStream} containing the remaining elements.
 	 * 
 	 * @param predicate
 	 *            Represents a filter-condition in form of a Lambda-expression.
 	 * 
-	 * @return A new @link {@link LazyStream} object containing all the elements
-	 *         of the input @link {@link LazyStream} except the elements that
-	 *         don't comply with the predicate condition.
+	 * @return A new @link {@link LazyStream} object containing all the elements of the input @link {@link LazyStream}
+	 *         except the elements that don't comply with the predicate condition.
 	 */
 
 	@Override
@@ -386,6 +395,8 @@ public abstract class LazyStream<E> implements Stream<E> {
 					public boolean hasNext() {
 						if (!isFinite)
 							return true;
+						// KOMMENTAR: Ich würde sagen, das ist nicht korrekt, weil ein unendlicher Stream nicht
+						// automatisch impliziert, dass irgendein Element den Test besteht.
 
 						try {
 							E e = next();
@@ -419,17 +430,14 @@ public abstract class LazyStream<E> implements Stream<E> {
 	}
 
 	/**
-	 * Applies a given function on every element of the given {@link LazyStream}
-	 * (of type <code>E</code> which returns another specified datatype
-	 * <code>F</code>. Like this, all containing elements are going to be
-	 * 'mapped' to the other datatype <code>F</code>.
+	 * Applies a given function on every element of the given {@link LazyStream} (of type <code>E</code> which returns
+	 * another specified datatype <code>F</code>. Like this, all containing elements are going to be 'mapped' to the
+	 * other datatype <code>F</code>.
 	 * 
 	 * @param mapping
-	 *            The specific mapping from <code>E</code> to <code>F</code> as
-	 *            Lamda-Expression.
+	 *            The specific mapping from <code>E</code> to <code>F</code> as Lamda-Expression.
 	 * 
-	 * @return A new {@link LazyStream} containing the mapped <code>F</code>
-	 *         -elements.
+	 * @return A new {@link LazyStream} containing the mapped <code>F</code> -elements.
 	 */
 	public <F> Stream<F> map(Mapping<? super E, ? extends F> mapping) {
 

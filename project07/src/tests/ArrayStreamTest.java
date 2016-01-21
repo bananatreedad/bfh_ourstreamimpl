@@ -14,7 +14,6 @@ public class ArrayStreamTest {
 	public void test_get() {
 		ArrayStream<Integer> stream = new ArrayStream<>(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 
-		
 		Assert.assertEquals((Integer) 1, stream.get(0));
 		Assert.assertEquals((Integer) 2, stream.get(1));
 		Assert.assertEquals((Integer) 3, stream.get(2));

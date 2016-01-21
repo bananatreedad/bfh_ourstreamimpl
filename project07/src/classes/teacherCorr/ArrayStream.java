@@ -1,4 +1,4 @@
-package classes;
+package classes.teacherCorr;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -8,6 +8,7 @@ import java.util.Iterator;
  */
 public class ArrayStream<E> extends LazyStream<E> {
 
+	// KOMMENTAR: Diese ArrayListe ist nicht noetig
 	ArrayList<E> list = new ArrayList<>();
 
 	private E[] array;
