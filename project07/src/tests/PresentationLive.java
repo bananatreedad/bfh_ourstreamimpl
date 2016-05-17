@@ -1,5 +1,8 @@
 package tests;
 
+import java.util.ArrayList;
+import java.util.Vector;
+
 import classes.ArrayStream;
 import classes.SeededStream;
 
@@ -17,6 +20,14 @@ public class PresentationLive {
 		
 		System.out.println(intSeedStream.get(5));
 		
-		intSeedStream.limit(1000).forEach(System.out::println);
+		Vector<String> vec = new Vector<>();
+		vec.addElement("test");
+		System.out.println(vec.size());
+		
+		vec.insertElementAt("wassap", 0);
+		vec.addElement("asd");
+		
+		vec.forEach(System.out::println);
+		ArrayList<String> list = new ArrayList<>();
 	}
 }
